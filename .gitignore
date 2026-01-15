@@ -1,0 +1,34 @@
+# macOS
+.DS_Store
+
+# JUCE build folders (generated)
+Builds/
+
+# JUCE generated code (can be regenerated)
+JuceLibraryCode/
+
+# IDE files
+*.xcworkspace
+*.xcodeproj
+*.sln
+*.vcxproj*
+*.user
+
+# Compiled objects
+*.o
+*.obj
+*.a
+*.lib
+*.dylib
+*.so
+
+# CMake build folders (if you switch later)
+build/
+cmake-build-*/
+
+# VS Code
+.vscode/
+
+# Misc
+*.log
+0
