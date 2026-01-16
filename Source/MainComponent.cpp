@@ -17,7 +17,7 @@ MainComponent::MainComponent()
     else
     {
         // Specify the number of input and output channels that we want to open
-        setAudioChannels (2, 2);
+        setAudioChannels (0, 2);
     }
     addAndMakeVisible(playButton);
     addAndMakeVisible(stopButton);
@@ -43,6 +43,8 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
     // but be careful - it will be called on the audio thread, not the GUI thread.
 
     // For more details, see the help for AudioProcessor::prepareToPlay()
+    phase = 0.0;
+    dphase = 0.0001;
 }
 
 void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
@@ -55,8 +57,14 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
     // (to prevent the output of random noise)
 //    bufferToFill.clearActiveBufferRegion();
     auto* leftChan = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
+    auto* rightChan = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
     for(auto i=0; i< bufferToFill.numSamples; ++i){
-        
+//        double sample = rand.nextDouble() * 0.25;
+//        double sample =fmod(phase, 0.2);
+        double sample = sin(phase) *0.1;
+        leftChan[i] = sample;
+        rightChan[i] = sample;
+        phase += dphase;
     }
 }
 
@@ -105,6 +113,7 @@ void MainComponent::buttonClicked(juce::Button* button){
 
 void MainComponent::sliderValueChanged(juce::Slider *slider){
     if(slider == &volSlider){
-        std::cout <<"vol slider moved " <<slider -> getValue() <<std::endl;
+//        std::cout <<"vol slider moved " <<slider -> getValue() <<std::endl;
+        dphase = volSlider.getValue() * 0.01;
     }
 }
