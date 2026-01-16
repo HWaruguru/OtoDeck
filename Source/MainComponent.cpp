@@ -20,6 +20,11 @@ MainComponent::MainComponent()
         setAudioChannels (2, 2);
     }
     addAndMakeVisible(playButton);
+    addAndMakeVisible(stopButton);
+    addAndMakeVisible(volSlider);
+    playButton.addListener(this);
+    stopButton.addListener(this);
+    volSlider.addListener(this);
 }
 
 MainComponent::~MainComponent()
@@ -48,7 +53,11 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
 
     // Right now we are not producing any data, in which case we need to clear the buffer
     // (to prevent the output of random noise)
-    bufferToFill.clearActiveBufferRegion();
+//    bufferToFill.clearActiveBufferRegion();
+    auto* leftChan = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
+    for(auto i=0; i< bufferToFill.numSamples; ++i){
+        
+    }
 }
 
 void MainComponent::releaseResources()
@@ -66,6 +75,11 @@ void MainComponent::paint (juce::Graphics& g)
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
 
     // You can add your drawing code here!
+    g.setColour (juce::Colour (0, 122, 61)); 
+    g.setFont (20.0f);
+    g.drawText ("Hello from Kenya", getLocalBounds(),
+                 juce::Justification::centred, true);
+                      
 }
 
 void MainComponent::resized()
@@ -73,5 +87,24 @@ void MainComponent::resized()
     // This is called when the MainContentComponent is resized.
     // If you add any child components, this is where you should
     // update their positions.
-    playButton.setBounds(0,0,getWidth(), getHeight()/5);
+    double rowH = getHeight()/5;
+    playButton.setBounds(0,0,getWidth(), rowH);
+    stopButton.setBounds(0,rowH , getWidth(), rowH);
+    volSlider.setBounds(0,rowH *2,getWidth(), rowH);
+}
+
+void MainComponent::buttonClicked(juce::Button* button){
+    if (button == &playButton){
+        std::cout <<"Play button was clicked" <<std::endl;
+    }
+    if (button == &stopButton){
+        std::cout <<"Stop Button was clicked" <<std::endl;
+    }
+    
+}
+
+void MainComponent::sliderValueChanged(juce::Slider *slider){
+    if(slider == &volSlider){
+        std::cout <<"vol slider moved " <<slider -> getValue() <<std::endl;
+    }
 }
